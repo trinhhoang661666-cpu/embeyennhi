@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EmBeYennNhii</title>
+    <style>
+        /* ======================================================= */
+        /* CSS CHUNG & HIỆU ỨNG NỀN */
+        /* ======================================================= */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f7f3f9;
+            color: #4a148c;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            text-align: center;
+            /* Placeholder cho nền, sẽ được thay đổi bằng JS */
+            background-image: url('placeholder-background.jpg'); 
+            background-size: cover;
+            background-position: center;
+            transition: background-image 2s ease-in-out;
+        }
+        
+        .screen {
+            display: none;
+            max-width: 90%;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.25);
+            background-color: rgba(255, 255, 255, 0.9); /* Nền trong suốt nhẹ */
+            transition: opacity 1s ease-in-out, transform 1s ease-in-out;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Khởi đầu: Màn hình mật khẩu */
+        #password-screen {
+            display: block; 
+            background-color: #f9eefd;
+            border: 2px solid #e91e63;
+        }
+
+        /* ======================================================= */
+        /* CSS PHẦN 1: MẬT KHẨU */
+        /* ======================================================= */
+        #password-screen h1 {
+            color: #e91e63;
+        }
+        #password-input {
+            padding: 10px;
+            margin: 10px 0;
+            border: 2px solid #f06292;
+            border-radius: 5px;
+            font-size: 1em;
+            text-align: center;
+        }
+        #submit-btn {
+            background-color: #e91e63;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s;
+        }
+
+        /* ======================================================= */
+        /* CSS PHẦN 2: BỨC THƯ KÍN */
+        /* ======================================================= */
+        #letter-closed {
+            cursor: pointer;
+            width: 300px;
+            height: 200px;
+            background-color: #ffccbc;
+            /* Hiệu ứng 3D phong bì */
+            border-radius: 5px;
+            transform: rotateX(0deg); 
+        }
+
+        /* ======================================================= */
+        /* CSS PHẦN 3: LỜI CHÚC (Thư mở) */
+        /* ======================================================= */
+        #message-open {
+            max-width: 600px;
+            background-color: #fff9c4;
+            text-align: left;
+            border: 3px dashed #ff9800;
+            padding-bottom: 50px; /* Thêm không gian cho trái tim */
+        }
+        
+        /* Trái tim nhỏ giữa thư */
+        #ending-heart {
+            position: absolute;
+            bottom: 10px; /* Đặt gần dưới cùng của thư */
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 2.5em;
+            color: #e91e63;
+            cursor: pointer;
+            opacity: 1;
+            transition: opacity 1s ease-out, transform 0.5s;
+            z-index: 20;
+        }
+        
+        /* ======================================================= */
+        /* CSS CHO HIỆU ỨNG GALAXY VÀ ẢNH TRÔI NỔI */
+        /* ======================================================= */
+        
+        /* Hiệu ứng tan biến */
+        .fade-out {
+            opacity: 0 !important;
+        }
+
+        /* Hình ảnh trôi nổi */
+        .floating-image {
+            position: absolute;
+            width: 120px;
+            height: 120px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.8);
+            opacity: 0; /* Khởi đầu ẩn */
+            transition: opacity 2s, transform 30s linear, filter 2s;
+            z-index: 5;
+        }
+        
+        /* Animation trôi nổi */
+        @keyframes float {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(100px, 50px) rotate(5deg); }
+            50% { transform: translate(20px, -100px) rotate(-10deg); }
+            75% { transform: translate(-80px, 70px) rotate(3deg); }
+            100% { transform: translate(0, 0) rotate(0deg); }
+        }
+        
+    </style>
+</head>
+<body>
+
+    <audio id="music1" src="My only one (lyrics) - Sebastian Yatra ft. Isabela Moner - Finite Music (youtube).mp3" loop></audio>
+    <audio id="music2" src="[Lyric + Vietsub] Give Me Your Forever - Zack Tabudlo - 2 0 0 0 Gemini (youtube).mp3" loop></audio>
+    
+    <div id="password-screen" class="screen">
+        <h1>🔐 Chào Embe của anh</h1>
+        <p>Nhập mật khẩu đi Embe</p>
+        <input type="password" id="password-input" placeholder="Mật khẩu..." maxlength="8">
+        <button id="submit-btn">Phá Khóa</button>
+        <div id="error-message"></div>
+    </div>
+
+    <div id="letter-closed" class="screen">
+        <span style="font-size: 3em;">✉️</span>
+        <span style="font-size: 1.1em; margin-top: 10px; color: #d84315;">Nhấn vào đi Embe</span>
+    </div>
+
+    <div id="message-open" class="screen">
+        <h2>💖 Đôi Lời Gửi Embe Của Anh 💖</h2>
+        <p>
+            Gửi tới [Người Anh Thương],
+            <br><br>
+            Xin Chào Cô Gái Hài Hước Tym Nhiều Vết Xước !
+            <br><br>
+            Embe biettt hom nay la ngay gi khonggggg
+            <br><br>
+            Hôm nay là ngày của embe đó
+            <br><br>
+            Nên anh có một món quà nho nhỏ tặng embe của anh đó
+            <br><br>
+            Đây là "Bí Mật Cho Em".
+            <br><br>
+            Từ lúc quen embe và nghe embe kể về chuyện quá khứ của embe thì anh cũng đã quyết tâm chữa lành cho em roii heheh.
+            <br><br>
+            Anh biết là embe đã chịu nhiều thiệt thòi từ gđinh cho đến tình yêu
+            <br><br>
+            Nhưng mà embe đừng buồn vì giờ siu nhân đỏ chứng tỏ yeu em sẽ đến chữa lành cho embe nàaa.
+            <br><br>
+            Anh mong là món quà nho nhỏ này sẽ chữa lành một phần nào cho embe của anh aaa
+            <br><br>
+            Nhân Ngày 20/10.Anh chúc embe của anh thật nhiều sức khỏe,ngày càng xinh đẹp hơn,tích cực hơn và không khóc nữa hé hé hé
+            <br><br>
+            Anh yeuuu Embe (Đừng Chửi Anh Nhé)
+            <br><br>
+            Đọc xong thì nói anh nhó 💖
+        </p>
+        <p style="text-align: right; font-style: italic; color: #d84315;">
+            Yeu Embe❤️,<br>
+            [Người Chữa Lành]
+        </p>
+        <span id="ending-heart">❤️</span>
+    </div>
+    
+    <div id="floating-gallery"></div>
+
+
+    <script>
+        // CÁC THIẾT LẬP CẦN CHỈNH SỬA
+        const CORRECT_PASSWORD = "23062007"; 
+        const GALAXY_BACKGROUND_URL = "galaxy.gif"; // Đặt tên file GIF của bạn tại đây
+        
+        // Thay thế bằng URL/đường dẫn của ảnh bạn muốn trôi nổi
+        const FLOATING_IMAGES = [
+            "1.jfif", 
+            "2.jfif", 
+            "3.jfif",
+            "4.jfif",
+            "5.jfif",
+            "6.jfif",
+            "7.jfif",
+            "8.jfif",
+            "9.jfif",
+            "10.jfif",
+            "11.jfif",
+            "12.jfif",
+            "13.jfif",
+            "14.jfif",
+            "15.jfif",
+            "16.jfif",
+            "17.jfif",
+            "18.jfif",
+            "19.jfif",
+            "20.jfif",
+            "21.jfif",
+            "22.jfif",
+            "23.jfif",
+            "24.jfif",
+            "25.jfif",
+            "26.jfif",
+            "27.jfif",
+            "28.jfif",
+            "29.jfif",
+            "30.jfif",
+            "31.jfif",
+            "32.jfif",
+            "33.jfif",
+            "34.jfif"
+            // Thêm nhiều ảnh khác tại đây
+        ];
+
+        // Lấy các phần tử DOM & Audio
+        const passwordScreen = document.getElementById('password-screen');
+        const passwordInput = document.getElementById('password-input');
+        const submitBtn = document.getElementById('submit-btn');
+        const errorMessage = document.getElementById('error-message');
+        const letterClosed = document.getElementById('letter-closed');
+        const messageOpen = document.getElementById('message-open');
+        const endingHeart = document.getElementById('ending-heart');
+        const floatingGallery = document.getElementById('floating-gallery');
+        
+        const music1 = document.getElementById('music1');
+        const music2 = document.getElementById('music2');
+        
+        // -----------------------------------------------------------------
+        // LOGIC 1: XỬ LÝ NHẬP MẬT KHẨU
+        // -----------------------------------------------------------------
+        function handlePasswordSubmit() {
+            if (passwordInput.value === CORRECT_PASSWORD) {
+                // Nhập đúng
+                passwordScreen.classList.add('fade-out');
+                setTimeout(() => {
+                    passwordScreen.style.display = 'none';
+                    letterClosed.style.display = 'flex';
+                    letterClosed.style.opacity = '1';
+                }, 1000); // Ẩn sau 1 giây hiệu ứng fade-out
+                errorMessage.textContent = '';
+            } else {
+                errorMessage.textContent = 'Mật khẩu sai. Vui lòng thử lại.';
+                passwordInput.value = '';
+                passwordInput.focus();
+            }
+        }
+        
+        submitBtn.addEventListener('click', handlePasswordSubmit);
+        passwordInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') handlePasswordSubmit();
+        });
+
+        // -----------------------------------------------------------------
+        // LOGIC 2: XỬ LÝ CLICK BỨC THƯ
+        // -----------------------------------------------------------------
+        letterClosed.addEventListener('click', function() {
+            // Chơi nhạc nền 1
+            if (music1.paused) music1.play().catch(e => console.log("Lỗi: Không thể play nhạc 1 tự động.")); 
+            
+            letterClosed.classList.add('fade-out');
+            setTimeout(() => {
+                letterClosed.style.display = 'none';
+                messageOpen.style.display = 'block';
+                messageOpen.style.opacity = '1';
+                // Cuộn xuống để thấy trái tim
+                setTimeout(() => messageOpen.scrollTop = messageOpen.scrollHeight, 500);
+            }, 1000);
+        });
+
+        // -----------------------------------------------------------------
+        // LOGIC 3 & 4: XỬ LÝ CLICK VÀO TRÁI TIM
+        // -----------------------------------------------------------------
+        endingHeart.addEventListener('click', function() {
+            // 5. Mờ dần và biến mất
+            endingHeart.style.opacity = '0';
+            endingHeart.style.transform = 'translate(-50%, -10px) scale(0.😎';
+
+            // Ẩn màn hình lời chúc
+            messageOpen.classList.add('fade-out');
+            
+            // 6. Bật nhạc nền 2 và hiệu ứng Galaxy
+            setTimeout(() => {
+                // Dừng nhạc 1, Bật nhạc 2
+                music1.pause();
+                music1.currentTime = 0;
+                music2.play().catch(e => console.log("Lỗi: Không thể play nhạc 2 tự động."));
+                
+                messageOpen.style.display = 'none';
+
+                // Đổi nền sang Galaxy
+                document.body.style.backgroundImage = `url('${GALAXY_BACKGROUND_URL}')`;
+                
+                // Hiển thị ảnh trôi nổi
+                startFloatingImages();
+
+            }, 1000);
+        });
+
+        // -----------------------------------------------------------------
+        // HÀM TẠO ẢNH TRÔI NỔI NGẪU NHIÊN
+        // -----------------------------------------------------------------
+        function startFloatingImages() {
+            FLOATING_IMAGES.forEach((src, index) => {
+                const img = document.createElement('img');
+                img.src = src;
+                img.className = 'floating-image';
+                
+                // Vị trí ngẫu nhiên
+                const startX = Math.random() * window.innerWidth;
+                const startY = Math.random() * window.innerHeight;
+                img.style.left = `${startX}px`;
+                img.style.top = `${startY}px`;
+
+                // Độ trôi ngẫu nhiên
+                const duration = 20 + Math.random() * 20; // 20s - 40s
+                img.style.animation = `float ${duration}s linear infinite alternate`;
+                
+                // Độ trễ ngẫu nhiên
+                img.style.animationDelay = `${Math.random() * 5}s`;
+
+                floatingGallery.appendChild(img);
+                
+                // Hiển thị ảnh sau một thời gian ngắn
+                setTimeout(() => {
+                    img.style.opacity = '1';
+                }, 500 + index * 500); 
+            });
+        }
+    </script>
+</body>
+</html>
